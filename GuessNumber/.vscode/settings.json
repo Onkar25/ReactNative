@@ -1,0 +1,12 @@
+{
+	"prettier.singleAttributePerLine": true,
+	"prettier.useTabs": true,
+	"prettier.withNodeModules": true,
+	"colorHelper.resident": true,
+	"colorHelper.formatsOrder": [],
+	"python.analysis.autoFormatStrings": true,
+	"notebook.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"files.autoSave": "onFocusChange"
+}
