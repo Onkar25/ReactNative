@@ -2,6 +2,9 @@ import { View, StyleSheet, TextInput, Alert } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { useState } from "react";
 import Colors from "../constants/Colors";
+import Title from "../components/ui/Title";
+import Card from "../components/ui/card";
+import InstructionText from "../components/ui/instructionText";
 
 function StartGame({ onConfirmed }) {
 
@@ -24,38 +27,33 @@ function StartGame({ onConfirmed }) {
     setEnterNumber('');
   }
   return (
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.numberInput}
-        maxLength={2} keyboardType="number-pad" autoCapitalize="none"
-        value={enterNumber}
-        onChangeText={onTextChangeHandler}
-        autoCorrect={false} />
-      <View style={styles.buttonsContainer}>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton buttonPressed={resetInputHandler}>Reset</PrimaryButton></View>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton buttonPressed={confirmInputHandler}>Confirm</PrimaryButton></View>
-      </View>
+    <View style={styles.rootContainer}>
+      <Title>Guess My Number</Title>
+      <Card>
+        <InstructionText>Enter a Number </InstructionText>
+        <TextInput style={styles.numberInput}
+          maxLength={2} keyboardType="number-pad" autoCapitalize="none"
+          value={enterNumber}
+          onChangeText={onTextChangeHandler}
+          autoCorrect={false} />
+        <View style={styles.buttonsContainer}>
+          <PrimaryButton buttonPressed={resetInputHandler}>
+            Reset
+          </PrimaryButton>
+          <PrimaryButton buttonPressed={confirmInputHandler}>
+            Confirm
+          </PrimaryButton>
+        </View>
+      </Card>
     </View>
   );
 }
 export default StartGame;
 const styles = StyleSheet.create({
-  inputContainer: {
-    backgroundColor: Colors.primary1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+  rootContainer: {
+    flex: 1,
     marginTop: 100,
-    marginHorizontal: 24,
-    padding: 16,
-    borderRadius: 8,
-    elevation: 4,
-    // this are iOS related
-    shadowColor: Colors.darkColor,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
-    shadowOpacity: 0.25
-
+    alignItems: 'center'
   },
   numberInput: {
     height: 60,
@@ -71,7 +69,4 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row'
   },
-  buttonContainer: {
-    flex: 1
-  }
 });

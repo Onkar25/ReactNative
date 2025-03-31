@@ -6,33 +6,48 @@ import { useState } from 'react';
 import GameScreen from './screens/GameScreen';
 import Colors from './constants/Colors';
 import GameOverScreen from './screens/GameOverScreen';
-
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
 export default function App() {
 
   const [useNumber, setUseNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [roundNumber, setRoundNumber] = useState(0);
+  const [fontsLoaded] = useFonts({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   function pickedNumberHandler(pickedNumber) {
     setUseNumber(pickedNumber);
     setGameIsOver(false);
   }
 
-  function gameOverHandler() {
+  function gameOverHandler(numberOfRounds) {
     setGameIsOver(true);
+    setRoundNumber(numberOfRounds);
   }
-
+  function startNewGame() {
+    setRoundNumber(0);
+    setUseNumber(null);
+  }
 
   let screen = <StartGameScreen onConfirmed={pickedNumberHandler} />;
   if (useNumber) {
     screen = <GameScreen choseNumber={useNumber} onGameOver={gameOverHandler} />
   }
   if (gameIsOver && useNumber) {
-    screen = <GameOverScreen />;
+    screen = <GameOverScreen roundNumbers={roundNumber} userNumber={useNumber} onStartNewGame={startNewGame} />;
   }
   return (
     <LinearGradient colors={[Colors.gradiant1, Colors.gradiant2]}
       style={styles.mainContainer}>
       <ImageBackground style={styles.mainContainer}
-        source={require('./assets/background.png')} resizeMode='cover'
+        source={require('./assets/images/background.png')} resizeMode='cover'
         imageStyle={styles.imageContainer}>
         <SafeAreaView style={styles.mainContainer}>
           {screen}

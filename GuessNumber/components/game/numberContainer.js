@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   numberText: {
     color: Colors.secondary1,
+    fontFamily: 'open-sans-bold',
     fontSize: 36,
-    fontWeight: 'bold'
   },
 });

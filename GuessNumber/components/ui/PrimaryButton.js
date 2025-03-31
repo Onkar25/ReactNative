@@ -26,6 +26,7 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
   buttonOuterContainer: {
+    flex: 1,
     overflow: 'hidden',
     margin: 5,
     borderRadius: 10,
@@ -33,7 +34,8 @@ const styles = StyleSheet.create({
   buttonInnerContainer: {
     backgroundColor: Colors.primary3,
     elevation: 4,
-    padding: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 10,
   },
   buttonText: {
