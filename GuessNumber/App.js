@@ -7,7 +7,14 @@ import GameScreen from './screens/GameScreen';
 import Colors from './constants/Colors';
 import GameOverScreen from './screens/GameOverScreen';
 import { useFonts } from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+
+SplashScreen.preventAutoHideAsync();
+// SplashScreen.setOptions({
+//   duration: 1000,
+//   fade: true,
+// });
 export default function App() {
 
   const [useNumber, setUseNumber] = useState();
@@ -19,7 +26,7 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.hide();
   }
 
   function pickedNumberHandler(pickedNumber) {
@@ -44,17 +51,20 @@ export default function App() {
     screen = <GameOverScreen roundNumbers={roundNumber} userNumber={useNumber} onStartNewGame={startNewGame} />;
   }
   return (
-    <LinearGradient colors={[Colors.gradiant1, Colors.gradiant2]}
-      style={styles.mainContainer}>
-      <ImageBackground style={styles.mainContainer}
-        source={require('./assets/images/background.png')} resizeMode='cover'
-        imageStyle={styles.imageContainer}>
-        <SafeAreaView style={styles.mainContainer}>
-          {screen}
-        </SafeAreaView>
+    <>
+      <StatusBar style='light' />
+      <LinearGradient colors={[Colors.gradiant1, Colors.gradiant2]}
+        style={styles.mainContainer}>
+        <ImageBackground style={styles.mainContainer}
+          source={require('./assets/images/background.png')} resizeMode='cover'
+          imageStyle={styles.imageContainer}>
+          <SafeAreaView style={styles.mainContainer}>
+            {screen}
+          </SafeAreaView>
 
-      </ImageBackground>
-    </LinearGradient>
+        </ImageBackground>
+      </LinearGradient>
+    </>
   );
 }
 
