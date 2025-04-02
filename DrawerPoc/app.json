@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "MealsApp",
-    "slug": "MealsApp",
+    "name": "DrawerPoc",
+    "slug": "DrawerPoc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "default",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "backgroundColor": "#24180f",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
