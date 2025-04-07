@@ -1,13 +1,16 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-
-import Button from "../components/UI/Button";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/expenses-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { storeExpense, updateExpense, deleteExpense } from "../util/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 function ManageExpense({ route, navigation }) {
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState();
   const expensesCtx = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
@@ -21,24 +24,59 @@ function ManageExpense({ route, navigation }) {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
     expensesCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+    setIsFetching(true);
+    try {
+      await deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setError('Deleting Expenser raise error');
+    }
+    setIsFetching(false);
+
   }
 
   function cancelHandler() {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
+      setIsFetching(true);
+      try {
+        await updateExpense(editedExpenseId, expenseData);
+        navigation.goBack();
+      } catch (error) {
+        setError('Updating Expenser raise error');
+      }
+
+      setIsFetching(false);
     } else {
-      expensesCtx.addExpense(expenseData);
+      setIsFetching(true);
+      try {
+        const id = await storeExpense(expenseData);
+        expensesCtx.addExpense({ ...expenseData, id: id });
+        navigation.goBack();
+      } catch (error) {
+        setError('Adding Expenser raise error');
+      }
+      setIsFetching(false);
     }
-    navigation.goBack();
+
+  }
+  function errorHandler() {
+    setError(null);
   }
 
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
+
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
   return (
     <View style={styles.container}>
       <ExpenseForm
