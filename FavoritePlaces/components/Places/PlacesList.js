@@ -4,7 +4,7 @@ import { Colors } from "../../constants/colors";
 
 function PlacesList({ places }) {
 
-  if (!places) {
+  if (!places || places.length === 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.text}> No Place Found !!! </Text>

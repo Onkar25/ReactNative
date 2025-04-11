@@ -19,7 +19,8 @@
     "react-native-screens": "~4.4.0",
     "expo-image-picker": "~16.0.6",
     "expo-location": "~18.0.10",
-    "react-native-maps": "1.18.0"
+    "react-native-maps": "1.18.0",
+    "expo-sqlite": "~15.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
