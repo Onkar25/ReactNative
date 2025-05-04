@@ -1,24 +1,51 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Colors from "../../../constants/colors";
 import { Ionicons } from '@expo/vector-icons'
-function TaskListItem({ task }) {
+import { Swipeable } from "react-native-gesture-handler";
+import { deleteTaskById } from "../../../repository/TaskRepository";
+import { handleDelete } from "../../../screens/DailyTask/TasksList";
+function TaskListItem({ task, navigation }) {
+  async function deleteTask() {
+    try {
+      handleDelete(task.id);
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  function editTask() {
+    navigation.navigate('AddTask', { task: task });
+  }
+  const renderActions = () => (
+    <View style={styles.swipeContainer}>
+      <TouchableOpacity style={[styles.swipeItem, styles.editItem]} onPress={editTask}>
+        <Text style={styles.swipeText}>Edit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.swipeItem, styles.deleteItem]} onPress={deleteTask}>
+        <Text style={styles.swipeText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
   return (
-    <View style={styles.mainContainer}>
-      <View>
-        <Text style={[styles.text]}>{task.Title}</Text>
-        <Text style={[styles.text]}>{task.Description}</Text>
-      </View>
-      <View>
-        <View style={styles.dateContainer}>
-          <Ionicons name='calendar-outline' size='10' color={Colors.darkBlue} />
-          <Text style={[styles.text]}>{task.Taskdate}</Text>
+    <Swipeable renderRightActions={renderActions}>
+      <View style={styles.mainContainer}>
+        <View>
+          <Text style={[styles.text]}>{task.Title}</Text>
+          <Text style={[styles.text]}>{task.Description}</Text>
         </View>
-        <View style={styles.timeContainer}>
-          <Ionicons name='time-outline' size='10' color={Colors.darkBlue} />
-          <Text style={[styles.text]}>{task.Tasktime}</Text>
+        <View>
+          <View style={styles.dateContainer}>
+            {/* <Ionicons name='calendar-outline' size='10' color={Colors.darkBlue} /> */}
+            <Text style={[styles.text]}>{task.Taskdate}</Text>
+          </View>
+          <View style={styles.timeContainer}>
+            {/* <Ionicons name='time-outline' size='10' color={Colors.darkBlue} /> */}
+            <Text style={[styles.text]}>{task.Tasktime}</Text>
+          </View>
         </View>
-      </View>
-    </View >
+      </View >
+    </Swipeable>
   );
 }
 
@@ -34,7 +61,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 8,
+
     borderColor: Colors.darkBlue,
     borderWidth: 1,
     shadowColor: Colors.darkBlue,
@@ -55,5 +82,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center'
+  },
+  swipeContainer: {
+    flexDirection: 'row',
+    marginBottom: 8
+  },
+  swipeItem: {
+    width: 80,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editItem: {
+    backgroundColor: 'orange',
+  },
+  deleteItem: {
+    backgroundColor: 'red',
+  },
+  swipeText: {
+    color: 'white'
   }
 });

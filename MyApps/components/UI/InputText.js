@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 4,
     padding: 10,
-    fontSize: 16,
+    // fontSize: 16,
   },
 });

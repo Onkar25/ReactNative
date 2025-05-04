@@ -1,9 +1,9 @@
 import { initializeDatabase } from '../utils/Database';
-import * as SQLite from 'expo-sqlite';
-let database;
-
+// import * as SQLite from 'expo-sqlite';
+// let database;
+// const database = await SQLite.openDatabaseAsync('myApps.db');
 export async function CreateTaskTable() {
-  database = await initializeDatabase();
+  const database = await initializeDatabase();
 
   if (!database) {
     console.error("❌ Database initialization failed");
@@ -22,14 +22,19 @@ export async function CreateTaskTable() {
     );
   });
 
-  console.log("✅ Table created successfully");
+  console.log("Table created successfully");
 }
 
 export async function insertTask(task) {
   try {
+    const database = await initializeDatabase();
+
+    if (!database) {
+      console.error("❌ Database initialization failed");
+      throw new Error("Database is undefined");
+    }
 
     await database.withTransactionAsync(async (tx) => {
-      console.log(task);
       await database.runAsync(
         `INSERT INTO Tasks (Title, Description, Taskdate, Tasktime) VALUES (?, ?, ?, ?)`,
         [
@@ -48,35 +53,47 @@ export async function insertTask(task) {
 }
 
 export async function fetchAllPlaces() {
+
+  const database = await initializeDatabase();
+
+  if (!database) {
+    console.error("❌ Database initialization failed");
+    throw new Error("Database is undefined");
+  }
+
+
   return new Promise(async (resolve, reject) => {
     try {
       await database.withTransactionAsync(async (tx) => {
         const rows = await database.getAllAsync(`SELECT * FROM Tasks`);
 
         if (!rows) {
-          console.error("❌ No rows returned");
+          console.error("No rows returned");
           resolve([]); // return empty array safely
           return;
         }
 
-        // console.log("✅ Data fetched:", rows);
+        // console.log("Data fetched:", rows);
         resolve(rows);
       });
     } catch (error) {
-      console.error("❌ Error fetching data:", error);
+      console.error("Error fetching data:", error);
       reject(error);
     }
   });
 }
 
-export async function updatePlace(taskId, updatedTask) {
-  database = await initializeDatabase();
-
-  if (!database) {
-    throw new Error("Database not initialized");
-  }
-
+export async function updateTask(taskId, updatedTask) {
   try {
+
+    const database = await initializeDatabase();
+
+    if (!database) {
+      console.error("❌ Database initialization failed");
+      throw new Error("Database is undefined");
+    }
+
+
     await database.withTransactionAsync(async (tx) => {
       await database.runAsync(
         `UPDATE Tasks
@@ -92,17 +109,18 @@ export async function updatePlace(taskId, updatedTask) {
       );
     });
 
-    console.log(`✅ Place with ID ${taskId} updated successfully`);
+    console.log(`✅ Task with ID ${taskId} updated successfully`);
   } catch (error) {
     console.error("❌ Error updating place:", error);
   }
 }
 
 export async function deleteAllPlaces() {
-  database = await initializeDatabase();
+  const database = await initializeDatabase();
 
   if (!database) {
-    throw new Error("Database not initialized");
+    console.error("❌ Database initialization failed");
+    throw new Error("Database is undefined");
   }
 
   try {
@@ -112,18 +130,20 @@ export async function deleteAllPlaces() {
       );
     });
 
-    console.log("✅ All Tasks deleted successfully");
+    console.log("All Tasks deleted successfully");
   } catch (error) {
-    console.error("❌ Error deleting all Tasks:", error);
+    console.error("Error deleting all Tasks:", error);
   }
 }
 
-export async function deletePlaceById(taskId) {
-  database = await initializeDatabase();
+export async function deleteTaskById(taskId) {
+  const database = await initializeDatabase();
 
   if (!database) {
-    throw new Error("Database not initialized");
+    console.error("❌ Database initialization failed");
+    throw new Error("Database is undefined");
   }
+
 
   try {
     await database.withTransactionAsync(async (tx) => {
@@ -132,8 +152,8 @@ export async function deletePlaceById(taskId) {
       );
     });
 
-    console.log(`✅ Place with ID ${taskId} deleted successfully`);
+    console.log(`Place with ID ${taskId} deleted successfully`);
   } catch (error) {
-    console.error("❌ Error deleting Tasks by id:", error);
+    console.error("Error deleting Tasks by id:", error);
   }
 }

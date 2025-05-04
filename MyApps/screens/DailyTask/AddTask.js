@@ -1,12 +1,22 @@
 import { Button, Text, View, StyleSheet, Switch } from "react-native";
 import InputText from "../../components/UI/InputText";
 import Colors from "../../constants/colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Task } from "../../models/Task";
 // import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { insertTask } from "../../repository/TaskRepository";
-
-function AddTask({ navigation }) {
+import { insertTask, updateTask } from "../../repository/TaskRepository";
+let fetchTask;
+function AddTask({ route, navigation }) {
+  useEffect(() => {
+    fetchTask = route.params?.task;
+    if (fetchTask) {
+      setTitle(fetchTask.Title);
+      setDescription(fetchTask.Description);
+      if (fetchTask.Tasktime) {
+        setIsAlarmEnable(true);
+      }
+    }
+  }, [route.params]);
   const [isAlarmEnable, setIsAlarmEnable] = useState(false);
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -21,16 +31,16 @@ function AddTask({ navigation }) {
 
     try {
       const task = new Task(Title, Description, isAlarmEnable);
-      // console.log(isAlarmEnable);
-      // console.log(task);
-      await insertTask(task);
+      if (fetchTask) {
+        await updateTask(fetchTask.id, task);
+      } else {
+        await insertTask(task);
+      }
+
       navigation.goBack();
     } catch (error) {
       console.log(error);
     }
-    //   }
-    //   addTask();
-    // }, []);
   }
 
   return (
@@ -73,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 24,
+    // fontSize: 24,
     fontWeight: 'bold',
     alignSelf: 'center',
     color: 'white'

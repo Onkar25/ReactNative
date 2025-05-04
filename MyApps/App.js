@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { dbInit, insertPlace, updatePlace, deleteAllPlaces, deletePlaceById, fetchAllPlaces } from './utils/Database';
+import { dbInit, insertPlace, updatePlace, deleteAllPlaces, deletePlaceById, fetchAllPlaces, initializeDatabase } from './utils/Database';
 import FlyoutDrawer from './screens/FlyoutDrawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -62,14 +62,20 @@ export default function App() {
 
   //   initializeApp();
   // }, []);
+  // async function init() {
+  //   await initializeDatabase();
+  //   await CreateTaskTable();
+  // }
+  // useEffect(() => {
+  //   init();
+  // }, []);
   return (
     <>
       <StatusBar style='dark' />
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <FlyoutDrawer /> */}
-          <Stack.Screen name='Home' component={FlyoutDrawer} />
-          <Stack.Screen name="AddTask" component={AddTask} />
+          <Stack.Screen name='Home' component={FlyoutDrawer} options={{ headerShown: false }} />
+          <Stack.Screen name="AddTask" component={AddTask} options={{ title: 'Add Task' }} />
         </Stack.Navigator>
 
       </NavigationContainer>
