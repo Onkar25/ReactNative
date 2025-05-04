@@ -5,7 +5,7 @@ function FlyoutDrawer() {
   return (
 
     <Drawer.Navigator>
-      <Drawer.Screen name="Daily Task" component={DailyTaskTabs} />
+      <Drawer.Screen name="Tasks" component={DailyTaskTabs} />
     </Drawer.Navigator>
 
   );

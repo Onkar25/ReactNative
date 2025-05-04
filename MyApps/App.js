@@ -4,21 +4,18 @@ import { dbInit, insertPlace, updatePlace, deleteAllPlaces, deletePlaceById, fet
 import FlyoutDrawer from './screens/FlyoutDrawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import AddTask from './screens/DailyTask/AddTask';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { CreateTaskTable } from './repository/TaskRepository';
 
-const Drawer = createDrawerNavigator();
+
+const Stack = createNativeStackNavigator();
 export default function App() {
-
-  return (
-    <>
-      <StatusBar style='dark' />
-      <NavigationContainer>
-        <FlyoutDrawer />
-      </NavigationContainer>
-    </>
-  );
   // useEffect(() => {
   //   async function initializeApp() {
   //     try {
+  //       console.log('App.js Logs');
+  //       await CreateTaskTable();
   //       // await dbInit();
   //       // // Example place to insert
   //       // const examplePlace = {
@@ -63,8 +60,22 @@ export default function App() {
   //     }
   //   }
 
-  //   // initializeApp();
+  //   initializeApp();
   // }, []);
+  return (
+    <>
+      <StatusBar style='dark' />
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/* <FlyoutDrawer /> */}
+          <Stack.Screen name='Home' component={FlyoutDrawer} />
+          <Stack.Screen name="AddTask" component={AddTask} />
+        </Stack.Navigator>
+
+      </NavigationContainer>
+    </>
+  );
+
 
 
 }
