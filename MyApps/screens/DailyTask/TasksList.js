@@ -44,7 +44,26 @@ function TaskList({ navigation }) {
   function AddTaskNavigate() {
     // navigation.navigate("AddTask");
     triggerNotification();
+
+    /*
+    // Example: Assume `taskDateTime` is a Date object (e.g., from datepicker & timepicker)
+const taskDateTime = new Date(2025, 4, 7, 15, 30); // 7 May 2025, 3:30 PM
+
+scheduleTaskNotification(taskDateTime, "📝 Upcoming Task", "Don't forget: Complete your task by 3:30 PM!");
+    */
   }
+
+  async function scheduleTaskNotification(dateTime, title = "Task Reminder", body = "It's time for your task!") {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title,
+        body,
+        sound: true,
+      },
+      trigger: dateTime, // Date object
+    });
+  }
+
   function triggerNotification() {
     Notifications.scheduleNotificationAsync({
       content: {

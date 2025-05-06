@@ -39,7 +39,13 @@ export default function App() {
 
     requestPermissions();
   }, []);
+  useEffect(() => {
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      console.log("Notification Received:", notification);
+    });
 
+    return () => subscription.remove();
+  }, []);
   return (
     <>
       <StatusBar style="dark" />
