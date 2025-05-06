@@ -1,6 +1,10 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import Colors from "../../constants/colors";
-import { CreateTaskTable, deleteTaskById, fetchAllPlaces } from "../../repository/TaskRepository";
+import {
+  CreateTaskTable,
+  deleteTaskById,
+  fetchAllPlaces,
+} from "../../repository/TaskRepository";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
@@ -13,7 +17,7 @@ export const handleDelete = async (taskId, setTasks) => {
     const updatedTasks = await fetchAllPlaces(); // fetch fresh list
     setTasks(updatedTasks); // update FlatList data
   } catch (err) {
-    console.error('Error deleting task:', err);
+    console.error("Error deleting task:", err);
   }
 };
 
@@ -22,13 +26,11 @@ function TaskList({ navigation }) {
   const [tasks, setTasks] = useState();
   useEffect(() => {
     if (isFocused) {
-
       GetAllTask();
     }
   }, [isFocused]);
   async function GetAllTask() {
     try {
-
       await CreateTaskTable();
       const tasksList = await fetchAllPlaces();
       setTasks(tasksList);
@@ -36,8 +38,6 @@ function TaskList({ navigation }) {
       console.log(error);
     }
   }
-
-
 
   // useEffect(() => {
   //   if (tasks) {
@@ -47,7 +47,7 @@ function TaskList({ navigation }) {
   // }, [tasks]);
 
   function AddTaskNavigate() {
-    navigation.navigate('AddTask');
+    navigation.navigate("AddTask");
   }
   return (
     <View style={styles.mainContainer}>
@@ -61,7 +61,11 @@ function TaskList({ navigation }) {
           ListEmptyComponent={<Text>No tasks found</Text>}
         />
       </View>
-      <Button title="Add Task" style={styles.button} onPress={AddTaskNavigate} />
+      <Button
+        title="Add Task"
+        style={styles.button}
+        onPress={AddTaskNavigate}
+      />
     </View>
   );
 }
@@ -70,7 +74,7 @@ export default TaskList;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1
+    flex: 1,
   },
   taskList: {
     flex: 9,
@@ -79,11 +83,8 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-  }
+  },
 });
-
-
-
 
 /*
 const { setTasks } = useTasks();

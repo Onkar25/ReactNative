@@ -1,0 +1,30 @@
+{
+	"project_info": {
+		"project_number": "741482957453",
+		"firebase_url": "https://react-native-course-7e6d8-default-rtdb.firebaseio.com",
+		"project_id": "react-native-course-7e6d8",
+		"storage_bucket": "react-native-course-7e6d8.firebasestorage.app"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "1:741482957453:android:da18f3d60b97f6570e70c4",
+				"android_client_info": {
+					"package_name": "com.onkar360.myapps"
+				}
+			},
+			"oauth_client": [],
+			"api_key": [
+				{
+					"current_key": "AIzaSyDvs6WAXfJAJyzoSaiKBVjY_HXyT-zF2wI"
+				}
+			],
+			"services": {
+				"appinvite_service": {
+					"other_platform_oauth_client": []
+				}
+			}
+		}
+	],
+	"configuration_version": "1"
+}
