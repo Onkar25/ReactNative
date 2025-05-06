@@ -10,7 +10,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
 import TaskListItem from "../../components/UI/DailyTask/TaskListItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import * as Notifications from 'expo-notifications';
 export const handleDelete = async (taskId, setTasks) => {
   try {
     await deleteTaskById(taskId);
@@ -42,9 +42,21 @@ function TaskList({ navigation }) {
   }
 
   function AddTaskNavigate() {
-    navigation.navigate("AddTask");
+    // navigation.navigate("AddTask");
+    triggerNotification();
   }
-
+  function triggerNotification() {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "📅 Task Reminder",
+        body: "You have a task scheduled!",
+        sound: true,
+      },
+      trigger: {
+        seconds: 2, // Delay by 2 seconds
+      },
+    });
+  }
   return (
     <View style={styles.mainContainer}>
 

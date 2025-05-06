@@ -19,6 +19,27 @@ export default function App() {
   // useEffect(() => {
   //   registerForPushNotificationsAsync();
   // }, []);
+
+  useEffect(() => {
+    async function requestPermissions() {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission for notifications not granted');
+        return;
+      }
+
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.HIGH,
+          sound: true,
+        });
+      }
+    }
+
+    requestPermissions();
+  }, []);
+
   return (
     <>
       <StatusBar style="dark" />
