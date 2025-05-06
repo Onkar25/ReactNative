@@ -16,9 +16,9 @@ Notifications.setNotificationHandler({
 });
 const Stack = createNativeStackNavigator();
 export default function App() {
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-  }, []);
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync();
+  // }, []);
   return (
     <>
       <StatusBar style="dark" />

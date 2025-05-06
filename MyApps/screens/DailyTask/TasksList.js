@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Colors from "../../constants/colors";
 import {
   CreateTaskTable,
@@ -9,13 +9,13 @@ import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
 import TaskListItem from "../../components/UI/DailyTask/TaskListItem";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export const handleDelete = async (taskId, setTasks) => {
   try {
-    console.log("DELETE TASK : " + taskId);
-    await deleteTaskById(taskId); // your DB delete function
-    const updatedTasks = await fetchAllPlaces(); // fetch fresh list
-    setTasks(updatedTasks); // update FlatList data
+    await deleteTaskById(taskId);
+    const updatedTasks = await fetchAllPlaces();
+    setTasks(updatedTasks);
   } catch (err) {
     console.error("Error deleting task:", err);
   }
@@ -23,12 +23,14 @@ export const handleDelete = async (taskId, setTasks) => {
 
 function TaskList({ navigation }) {
   const isFocused = useIsFocused();
-  const [tasks, setTasks] = useState();
+  const [tasks, setTasks] = useState([]);
+
   useEffect(() => {
     if (isFocused) {
       GetAllTask();
     }
   }, [isFocused]);
+
   async function GetAllTask() {
     try {
       await CreateTaskTable();
@@ -39,33 +41,28 @@ function TaskList({ navigation }) {
     }
   }
 
-  // useEffect(() => {
-  //   if (tasks) {
-  //     console.log("Updated tasks:", tasks);
-  //   }
-
-  // }, [tasks]);
-
   function AddTaskNavigate() {
     navigation.navigate("AddTask");
   }
+
   return (
     <View style={styles.mainContainer}>
+
       <View style={styles.taskList}>
         <FlatList
           data={tasks}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TaskListItem task={item} navigation={navigation} />
           )}
-          ListEmptyComponent={<Text>No tasks found</Text>}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>🗒️ No tasks yet. Tap "+" to add one.</Text>
+          }
         />
       </View>
-      <Button
-        title="Add Task"
-        style={styles.button}
-        onPress={AddTaskNavigate}
-      />
+      <TouchableOpacity style={styles.fab} onPress={AddTaskNavigate}>
+        <Icon name="plus" size={30} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -75,57 +72,48 @@ export default TaskList;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: Colors.primaryBlue,
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  header: {
+    fontSize: 22,
+    color: "white",
+    fontWeight: "bold",
+    marginBottom: 10,
+    alignSelf: "center",
   },
   taskList: {
-    flex: 9,
-    backgroundColor: Colors.secondaryBlue,
-    padding: 10,
-  },
-  button: {
     flex: 1,
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 16,
+    color: "#888",
+  },
+  fab: {
+    position: 'absolute',
+    right: 30,
+    bottom: 20,
+    backgroundColor: Colors.primaryBlue,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 6, // For Android
+    shadowColor: '#000', // For iOS
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });
-
-/*
-const { setTasks } = useTasks();
-
-✅ To make that work, you need:
-
-1. A proper TaskContext.js setup
-// TaskContext.js
-import React, { createContext, useContext, useState } from 'react';
-import { fetchAllPlaces } from './repository/TaskRepository';
-
-const TaskContext = createContext();
-
-export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
-
-  const loadTasks = async () => {
-    const data = await fetchAllPlaces();
-    setTasks(data);
-  };
-
-  return (
-    <TaskContext.Provider value={{ tasks, setTasks, loadTasks }}>
-      {children}
-    </TaskContext.Provider>
-  );
-};
-
-export const useTasks = () => useContext(TaskContext);
-
-In App.js:
-import { TaskProvider } from './TaskContext'; // adjust the path
-
-export default function App() {
-  return (
-    <TaskProvider>
-      <NavigationContainer>
-        
-        </NavigationContainer>
-        </TaskProvider>
-      );
-    }
-
-*/

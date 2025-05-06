@@ -1,9 +1,8 @@
 export class Task {
-  constructor(title, description, alarm) {
+  constructor(title, description, taskdate, tasktime) {
     this.Title = title;
     this.Description = description;
-    const now = new Date();
-    this.Taskdate = alarm ? now.toLocaleDateString() : null;
-    this.Tasktime = alarm ? now.toLocaleTimeString() : null;
+    this.Taskdate = taskdate;
+    this.Tasktime = tasktime;
   }
 }
