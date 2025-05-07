@@ -7,6 +7,10 @@ import { insertTask, updateTask } from "../../repository/TaskRepository";
 import Datepicker from "../../components/UI/Datepicker";
 import Timepicker from "../../components/UI/Timepicker";
 import { timeStringToDate } from "../../utils/Converters";
+import {
+  scheduleLocalNotification,
+  scheduleTaskNotification,
+} from "../../utils/Notifications";
 
 let fetchTask;
 
@@ -28,12 +32,12 @@ function AddTask({ route, navigation }) {
   }, [route.params]);
 
   const [isAlarmEnable, setIsAlarmEnable] = useState(false);
-  const [Title, setTitle] = useState('');
-  const [Description, setDescription] = useState('');
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
   const [alarmDate, setalarmDate] = useState(new Date());
   const [alarmTime, setalarmTime] = useState(new Date());
 
-  const toggleAlarm = () => setIsAlarmEnable(prev => !prev);
+  const toggleAlarm = () => setIsAlarmEnable((prev) => !prev);
   const TitleTextChange = (text) => setTitle(text);
   const DescriptionTextChange = (text) => setDescription(text);
 
@@ -48,11 +52,28 @@ function AddTask({ route, navigation }) {
       if (fetchTask) {
         await updateTask(fetchTask.id, task);
       } else {
+
+        // const taskDateTime = new Date(
+        //   alarmTime.getFullYear(),
+        //   alarmTime.getMonth(),
+        //   alarmTime.getDate(),
+        //   alarmTime.getHours(),
+        //   alarmTime.getMinutes(),
+        //   alarmTime.getSeconds()
+        // );
+
+        // await scheduleTaskNotification(
+        //   taskDateTime,
+        //   "📝 Upcoming Task",
+        //   "Don't forget: Complete your task by 3:30 PM!"
+        // );
+        // await scheduleLocalNotification(alarmTime);
+
         await insertTask(task);
       }
       navigation.goBack();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -61,8 +82,16 @@ function AddTask({ route, navigation }) {
       <Text style={styles.title}>📝 Add Task</Text>
 
       <View style={styles.card}>
-        <InputText title={'Task Name'} value={Title} onValueChange={TitleTextChange} />
-        <InputText title={'Task Description'} value={Description} onValueChange={DescriptionTextChange} />
+        <InputText
+          title={"Task Name"}
+          value={Title}
+          onValueChange={TitleTextChange}
+        />
+        <InputText
+          title={"Task Description"}
+          value={Description}
+          onValueChange={DescriptionTextChange}
+        />
       </View>
 
       <View style={[styles.card, styles.alarmCard]}>
@@ -80,7 +109,9 @@ function AddTask({ route, navigation }) {
       </View>
 
       <TouchableOpacity style={styles.button} onPress={AddTaskHandler}>
-        <Text style={styles.buttonText}>{fetchTask ? "Update Task" : "Add Task"}</Text>
+        <Text style={styles.buttonText}>
+          {fetchTask ? "Update Task" : "Add Task"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -95,46 +126,46 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    color: 'white',
+    fontWeight: "bold",
+    alignSelf: "center",
+    color: "white",
     marginBottom: 20,
   },
   label: {
     color: Colors.primaryBlue,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
   },
   alarmContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 16,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 3,
   },
   alarmCard: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   button: {
-    backgroundColor: '#ff914d',
+    backgroundColor: "#ff914d",
     borderRadius: 10,
     paddingVertical: 14,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
-  }
+    fontWeight: "bold",
+  },
 });

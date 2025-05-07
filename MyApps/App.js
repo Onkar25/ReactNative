@@ -5,15 +5,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import AddTask from "./screens/DailyTask/AddTask";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerForPushNotificationsAsync } from "./utils/Notifications";
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   // useEffect(() => {
@@ -23,14 +24,14 @@ export default function App() {
   useEffect(() => {
     async function requestPermissions() {
       const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission for notifications not granted');
+      if (status !== "granted") {
+        alert("Permission for notifications not granted");
         return;
       }
 
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
           importance: Notifications.AndroidImportance.HIGH,
           sound: true,
         });
@@ -40,9 +41,11 @@ export default function App() {
     requestPermissions();
   }, []);
   useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(notification => {
-      console.log("Notification Received:", notification);
-    });
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("Notification Received:", notification);
+      }
+    );
 
     return () => subscription.remove();
   }, []);

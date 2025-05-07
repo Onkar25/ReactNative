@@ -1,27 +1,28 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Colors from "../../constants/colors";
 import {
   CreateTaskTable,
   deleteTaskById,
-  fetchAllPlaces,
+  fetchAllTasks,
 } from "../../repository/TaskRepository";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
 import TaskListItem from "../../components/UI/DailyTask/TaskListItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import * as Notifications from 'expo-notifications';
-export const handleDelete = async (taskId, setTasks) => {
-  try {
-    await deleteTaskById(taskId);
-    const updatedTasks = await fetchAllPlaces();
-    setTasks(updatedTasks);
-  } catch (err) {
-    console.error("Error deleting task:", err);
-  }
-};
-
-function TaskList({ navigation }) {
+import dayjs from 'dayjs';
+import { timeStringToDate } from "../../utils/Converters";
+function TaskList({ navigation, route }) {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: route.name === 'Favorite Task' ? 'Favorite Tasks' : 'Daily Tasks',
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ marginLeft: 15 }}>
+          <Icon name="menu" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, route.name]);
   const isFocused = useIsFocused();
   const [tasks, setTasks] = useState([]);
 
@@ -34,57 +35,42 @@ function TaskList({ navigation }) {
   async function GetAllTask() {
     try {
       await CreateTaskTable();
-      const tasksList = await fetchAllPlaces();
+      const tasksList = await fetchAllTasks();
       setTasks(tasksList);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
+  const handleDelete = async (taskId) => {
+    try {
+      await deleteTaskById(taskId);
+      const updatedTasks = await fetchAllTasks();
+      setTasks(updatedTasks);
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
+  const today = dayjs().format('YYYY-MM-DD');
+  const filteredTasks = tasks.filter(task => {
+    const date = timeStringToDate(task.Taskdate, task.Tasktime);
+    const taskDate = dayjs(date).format('YYYY-MM-DD');
+    if (route.name === 'Favorite Task') {
+      return taskDate === today;
+    }
+    return true;
+  });
 
   function AddTaskNavigate() {
-    // navigation.navigate("AddTask");
-    triggerNotification();
-
-    /*
-    // Example: Assume `taskDateTime` is a Date object (e.g., from datepicker & timepicker)
-const taskDateTime = new Date(2025, 4, 7, 15, 30); // 7 May 2025, 3:30 PM
-
-scheduleTaskNotification(taskDateTime, "📝 Upcoming Task", "Don't forget: Complete your task by 3:30 PM!");
-    */
-  }
-
-  async function scheduleTaskNotification(dateTime, title = "Task Reminder", body = "It's time for your task!") {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title,
-        body,
-        sound: true,
-      },
-      trigger: dateTime, // Date object
-    });
-  }
-
-  function triggerNotification() {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "📅 Task Reminder",
-        body: "You have a task scheduled!",
-        sound: true,
-      },
-      trigger: {
-        seconds: 2, // Delay by 2 seconds
-      },
-    });
+    navigation.navigate("AddTask");
   }
   return (
     <View style={styles.mainContainer}>
-
       <View style={styles.taskList}>
         <FlatList
-          data={tasks}
+          data={filteredTasks}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TaskListItem task={item} navigation={navigation} />
+            <TaskListItem task={item} navigation={navigation} onDelete={() => handleDelete(item.id)} />
           )}
           ListEmptyComponent={
             <Text style={styles.emptyText}>🗒️ No tasks yet. Tap "+" to add one.</Text>

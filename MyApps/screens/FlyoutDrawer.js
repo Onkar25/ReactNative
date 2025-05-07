@@ -3,7 +3,9 @@ import DailyTaskTabs from "./DailyTask/DailyTaskTabs";
 const Drawer = createDrawerNavigator();
 function FlyoutDrawer() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator screenOptions={{
+      headerShown: false, // hides the default drawer header
+    }}>
       <Drawer.Screen name="Tasks" component={DailyTaskTabs} />
     </Drawer.Navigator>
   );

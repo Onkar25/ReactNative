@@ -8,11 +8,12 @@ function DailyTaskTabs() {
 
     <MyTabs.Navigator
       screenOptions={{
-        headerShown: false, // Hides the header for all tab screens
+        headerShown: true, // Hides the header for all tab screens
         tabBarStyle: { backgroundColor: '#007bff', height: 60 }, // Custom background color and height
         tabBarActiveTintColor: '#ffffff', // Color for active tab
         tabBarInactiveTintColor: '#888',  // Color for inactive tab
         tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' }, // Style for tab labels
+
       }}
     >
       <MyTabs.Screen
@@ -27,7 +28,7 @@ function DailyTaskTabs() {
       />
       <MyTabs.Screen
         name="Favorite Task"
-        component={FavoriteTask}
+        component={TaskList}
         options={{
           tabBarIcon: ({ color, size }) => (
             <IconButton iconName="star" color={color} size={size} />

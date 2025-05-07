@@ -1,7 +1,4 @@
 import { initializeDatabase } from '../utils/Database';
-// import * as SQLite from 'expo-sqlite';
-// let database;
-// const database = await SQLite.openDatabaseAsync('myApps.db');
 export async function CreateTaskTable() {
   const database = await initializeDatabase();
 
@@ -46,13 +43,13 @@ export async function insertTask(task) {
       );
     });
 
-    console.log("✅ Place inserted successfully");
+    console.log("✅ Task inserted successfully");
   } catch (error) {
     console.log("❌ Error inserting place:", error);
   }
 }
 
-export async function fetchAllPlaces() {
+export async function fetchAllTasks() {
 
   const database = await initializeDatabase();
 
@@ -73,7 +70,6 @@ export async function fetchAllPlaces() {
           return;
         }
 
-        // console.log("Data fetched:", rows);
         resolve(rows);
       });
     } catch (error) {
@@ -152,7 +148,7 @@ export async function deleteTaskById(taskId) {
       );
     });
 
-    console.log(`Place with ID ${taskId} deleted successfully`);
+    console.log(`Task with ID ${taskId} deleted successfully`);
   } catch (error) {
     console.error("Error deleting Tasks by id:", error);
   }

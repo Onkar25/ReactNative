@@ -2,16 +2,9 @@ import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native
 import Colors from "../../../constants/colors";
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from "react-native-gesture-handler";
-import { handleDelete } from "../../../screens/DailyTask/TasksList";
+import { handleTaskDelete } from "../../../screens/DailyTask/TasksList";
 
-function TaskListItem({ task, navigation }) {
-  async function deleteTask() {
-    try {
-      handleDelete(task.id);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+function TaskListItem({ task, navigation, onDelete }) {
 
   function editTask() {
     navigation.navigate('AddTask', { task: task });
@@ -23,7 +16,7 @@ function TaskListItem({ task, navigation }) {
         <Ionicons name="create-outline" size={24} color="green" />
         <Text style={styles.swipeText}>Edit</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.swipeItem, styles.deleteItem]} onPress={deleteTask}>
+      <TouchableOpacity style={[styles.swipeItem, styles.deleteItem]} onPress={onDelete}>
         <Ionicons name="trash-outline" size={24} color="red" />
         <Text style={styles.swipeText}>Delete</Text>
       </TouchableOpacity>
